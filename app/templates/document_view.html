@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}{{ document.filename }} - SafeSign AI{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-dark text-white">
+                <h3>📋 {{ document.filename }}</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Subido: {{ document.created_at.strftime('%d de %B de %Y a las %H:%M') }}</p>
+                
+                <div class="alert alert-info">
+                    <strong>Estado:</strong>
+                    {% if document.status == 'firmado' %}
+                        <span class="badge bg-success">✓ Firmado</span>
+                    {% else %}
+                        <span class="badge bg-warning">⏳ Pendiente de firma</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">📝 Resumen del Contrato</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ document.resumen_ia or 'Sin resumen disponible' }}</p>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">✅ Obligaciones Principales</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {% for obligacion in (document.obligaciones or '').split('\n') %}
+                        {% if obligacion %}
+                            <li>{{ obligacion }}</li>
+                        {% endif %}
+                    {% else %}
+                        <li>Sin obligaciones identificadas.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">⚠️ Riesgos Detectados</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {% for riesgo in (document.riesgos or '').split('\n') %}
+                        {% if riesgo %}
+                            <li>{{ riesgo }}</li>
+                        {% endif %}
+                    {% else %}
+                        <li>No se detectaron riesgos evidentes.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow sticky-top">
+            <div class="card-body">
+                <h5 class="card-title">Próximos Pasos</h5>
+                
+                {% if document.status == 'pendiente' %}
+                    <div class="d-grid gap-2">
+                        <a href="/verify/?doc_id={{ document.id }}" class="btn btn-warning btn-lg">
+                            1️⃣ Verificar Identidad
+                        </a>
+                        <a href="/sign/{{ document.id }}" class="btn btn-primary btn-lg disabled">
+                            2️⃣ Firmar Documento
+                        </a>
+                    </div>
+                    <small class="text-muted mt-3 d-block">
+                        Primero debes verificar tu identidad antes de firmar.
+                    </small>
+                {% elif document.status == 'firmado' %}
+                    <div class="alert alert-success">
+                        ✓ Este documento ya ha sido firmado.
+                    </div>
+                    <a href="/dashboard" class="btn btn-secondary w-100">Volver al Dashboard</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Subir Documento - SafeSign AI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <h2 class="card-title mb-4">📄 Subir Documento</h2>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="file" class="form-label">Selecciona un archivo PDF</label>
+                        <input type="file" class="form-control form-control-lg" id="file" name="file" accept=".pdf" required>
+                        <small class="form-text text-muted">Solo se permiten archivos PDF. Tamaño máximo: 50MB</small>
+                    </div>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <strong>ℹ️ Nota:</strong> Tu documento será analizado automáticamente por IA para:
+                        <ul class="mb-0 mt-2">
+                            <li>Generar un resumen claro</li>
+                            <li>Identificar obligaciones principales</li>
+                            <li>Detectar posibles riesgos</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">Subir y Analizar</button>
+                        <a href="/dashboard" class="btn btn-secondary btn-lg">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

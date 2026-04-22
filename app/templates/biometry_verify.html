@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block title %}Verificacion Biometrica - SafeSign AI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3>Verificacion Biometrica</h3>
+            </div>
+            <div class="card-body p-5">
+                <div id="dependency-alert" class="alert alert-warning d-none"></div>
+
+                <div class="alert alert-info">
+                    <strong>Instrucciones:</strong>
+                    <ol class="mb-0 mt-2">
+                        <li>Permite el acceso a la camara del navegador.</li>
+                        <li>Primero muestra tu documento de identidad frente a la camara.</li>
+                        <li>El nombre visible en el documento debe coincidir con el nombre de tu cuenta.</li>
+                        <li>Luego mira a la camara y sigue las acciones de movimiento.</li>
+                        <li>La firma solo se habilita si la verificacion facial aprueba.</li>
+                    </ol>
+                </div>
+
+                <div id="camera-error" class="alert alert-danger d-none"></div>
+
+                <div id="verification-container">
+                    <div id="step1" class="verification-step">
+                        <h5>Paso 1: Captura tu documento</h5>
+                        <p id="document-capture-status" class="fw-semibold text-primary">
+                            Ubica la cedula o pasaporte en pantalla y pulsa capturar.
+                        </p>
+                        <div class="border rounded p-3 mb-3 bg-light">
+                            <video id="camera1" playsinline autoplay muted></video>
+                            <img id="document-preview" class="img-fluid rounded d-none" alt="Foto del documento capturado">
+                        </div>
+                        <button id="btn-capture-id" class="btn btn-primary btn-lg w-100">
+                            Capturar documento
+                        </button>
+                    </div>
+
+                    <div id="step2" class="verification-step d-none">
+                        <h5>Paso 2: Prueba de vida y selfie</h5>
+                        <p id="movement-instruction" class="fw-semibold text-primary">
+                            Foto 1 de 5: mira hacia la izquierda y pulsa capturar.
+                        </p>
+                        <div class="border rounded p-3 mb-3 bg-light">
+                            <video id="camera2" playsinline autoplay muted></video>
+                        </div>
+                        <button id="btn-liveness" class="btn btn-warning btn-lg w-100">
+                            Capturar foto 1
+                        </button>
+                    </div>
+
+                    <div id="result" class="d-none">
+                        <h5>Resultado de verificacion</h5>
+                        <div id="semaforo-result" class="text-center my-4"></div>
+                        <button id="btn-next" class="btn btn-success btn-lg w-100 d-none">
+                            Continuar a firma
+                        </button>
+                        <a href="/dashboard" id="btn-dashboard" class="btn btn-secondary btn-lg w-100 d-none">
+                            Volver al dashboard
+                        </a>
+                    </div>
+                </div>
+
+                <canvas id="captureCanvas" class="d-none"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const docId = {{ doc_id|tojson }};
+    const video1 = document.getElementById('camera1');
+    const video2 = document.getElementById('camera2');
+    const canvas = document.getElementById('captureCanvas');
+    const cameraError = document.getElementById('camera-error');
+    const dependencyAlert = document.getElementById('dependency-alert');
+    const instruction = document.getElementById('movement-instruction');
+    const documentStatus = document.getElementById('document-capture-status');
+    const documentPreview = document.getElementById('document-preview');
+    const btnCaptureId = document.getElementById('btn-capture-id');
+    const btnLiveness = document.getElementById('btn-liveness');
+    const btnNext = document.getElementById('btn-next');
+    const btnDashboard = document.getElementById('btn-dashboard');
+    const resultBox = document.getElementById('semaforo-result');
+
+    let stream = null;
+    let verificationId = null;
+    let livenessFrames = [];
+    let livenessStep = 0;
+    const livenessActions = [
+        'Mira hacia la izquierda',
+        'Mira hacia la derecha',
+        'Sonrie',
+        'Mira hacia arriba',
+        'Selfie final: mira al frente'
+    ];
+
+    function showError(message) {
+        cameraError.textContent = message;
+        cameraError.classList.remove('d-none');
+    }
+
+    function setBusy(button, busy, text) {
+        button.disabled = busy;
+        if (text) button.textContent = text;
+    }
+
+    async function startCamera() {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                    facingMode: 'user'
+                },
+                audio: false
+            });
+            video1.srcObject = stream;
+            video2.srcObject = stream;
+        } catch (error) {
+            showError('No se pudo abrir la camara. Revisa permisos del navegador y que ninguna otra app la este usando.');
+        }
+    }
+
+    async function loadDependencyStatus() {
+        const response = await fetch('/verify/dependencies');
+        const status = await response.json();
+        if (!status.ready) {
+            dependencyAlert.innerHTML = `
+                Para verificacion facial real faltan dependencias:
+                OpenCV=${status.opencv ? 'OK' : 'FALTA'},
+                NumPy=${status.numpy ? 'OK' : 'FALTA'}.
+                Ejecuta <code>pip install -r requirements.txt</code> y reinicia el servidor.
+            `;
+            dependencyAlert.classList.remove('d-none');
+        } else if (!status.deepface) {
+            dependencyAlert.innerHTML = `
+                OpenCV esta activo. DeepFace/ArcFace no esta disponible, asi que se usara comparacion facial local con OpenCV.
+            `;
+            dependencyAlert.classList.remove('d-none');
+        }
+        if (!status.pytesseract || !status.tesseract_binary) {
+            dependencyAlert.innerHTML += `
+                <div class="mt-2">
+                    OCR de documento: pytesseract=${status.pytesseract ? 'OK' : 'FALTA'},
+                    tesseract=${status.tesseract_binary ? 'OK' : 'FALTA'}.
+                    Sin OCR no se puede validar el nombre de la cedula/pasaporte.
+                </div>
+            `;
+            dependencyAlert.classList.remove('d-none');
+        }
+    }
+
+    function captureBlob(filename, source) {
+        return new Promise((resolve, reject) => {
+            const activeSource = source || video2;
+            if (!activeSource.videoWidth || !activeSource.videoHeight) {
+                reject(new Error('La camara aun no esta lista.'));
+                return;
+            }
+            canvas.width = activeSource.videoWidth;
+            canvas.height = activeSource.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(activeSource, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => {
+                if (!blob) {
+                    reject(new Error('No se pudo capturar imagen.'));
+                    return;
+                }
+                resolve(new File([blob], filename, { type: 'image/jpeg' }));
+            }, 'image/jpeg', 0.92);
+        });
+    }
+
+    function updateLivenessInstruction() {
+        const current = livenessStep + 1;
+        instruction.textContent = `Foto ${current} de ${livenessActions.length}: ${livenessActions[livenessStep]} y pulsa capturar.`;
+        btnLiveness.textContent = `Capturar foto ${current}`;
+    }
+
+    btnCaptureId.addEventListener('click', async () => {
+        try {
+            setBusy(btnCaptureId, true, 'Capturando documento...');
+            const image = await captureBlob('documento.jpg', video1);
+            documentPreview.src = URL.createObjectURL(image);
+            documentPreview.classList.remove('d-none');
+            video1.classList.add('d-none');
+            documentStatus.textContent = 'Foto tomada. Ya puedes bajar el documento; estamos validando el nombre.';
+            setBusy(btnCaptureId, true, 'Analizando documento...');
+
+            const formData = new FormData();
+            formData.append('image', image);
+
+            const response = await fetch('/verify/capture-id', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                const details = data.document_text_preview
+                    ? `\n\nTexto leido por OCR:\n${data.document_text_preview}`
+                    : '';
+                throw new Error((data.error || 'No se pudo capturar el documento.') + details);
+            }
+
+            verificationId = data.verification_id;
+            if (data.detected_name) {
+                showNotification(`Nombre validado en documento: ${data.detected_name}`, 'success', 5000);
+            }
+            if (data.warning) showNotification(data.warning, 'warning', 5000);
+            document.getElementById('step1').classList.add('d-none');
+            document.getElementById('step2').classList.remove('d-none');
+        } catch (error) {
+            showError(error.message);
+            video1.classList.remove('d-none');
+            documentPreview.classList.add('d-none');
+            documentStatus.textContent = 'Ubica la cedula o pasaporte en pantalla y pulsa capturar.';
+        } finally {
+            setBusy(btnCaptureId, false, 'Capturar documento');
+        }
+    });
+
+    btnLiveness.addEventListener('click', async () => {
+        if (!verificationId) {
+            showError('Primero captura el documento.');
+            return;
+        }
+
+        try {
+            setBusy(btnLiveness, true, 'Tomando foto...');
+            const captured = await captureBlob(`captura_${livenessStep + 1}.jpg`, video2);
+
+            if (livenessStep < livenessActions.length - 1) {
+                livenessFrames.push(captured);
+                livenessStep += 1;
+                updateLivenessInstruction();
+                showNotification('Foto tomada', 'success', 900);
+                return;
+            }
+
+            const selfie = captured;
+            instruction.textContent = 'Procesando verificacion...';
+            setBusy(btnLiveness, true, 'Procesando...');
+
+            const formData = new FormData();
+            livenessFrames.forEach(frame => formData.append('frames', frame));
+            formData.append('selfie_image', selfie);
+            if (docId) formData.append('doc_id', docId);
+
+            const response = await fetch(`/verify/liveness-check/${verificationId}`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || 'No se pudo completar la verificacion.');
+            }
+
+            document.getElementById('step2').classList.add('d-none');
+            document.getElementById('result').classList.remove('d-none');
+
+            const ok = data.verificado;
+            const color = data.semaforo === 'VERDE' ? 'success' : 'danger';
+            resultBox.innerHTML = `
+                <div class="alert alert-${color}">
+                    <h3 class="mb-2">${data.semaforo}</h3>
+                    <p class="mb-1">${data.razon}</p>
+                    <small>Movimiento: ${Number(data.movement_score).toFixed(4)} | Distancia facial: ${data.distance === null ? 'N/A' : Number(data.distance).toFixed(4)}</small>
+                    ${data.face_error ? `<div class="mt-2 small">${data.face_error}</div>` : ''}
+                </div>
+            `;
+
+            if (ok && data.semaforo === 'VERDE' && docId) {
+                btnNext.classList.remove('d-none');
+            } else {
+                btnDashboard.classList.remove('d-none');
+            }
+        } catch (error) {
+            showError(error.message);
+        } finally {
+            if (livenessStep < livenessActions.length - 1) {
+                setBusy(btnLiveness, false);
+            } else {
+                setBusy(btnLiveness, false, 'Verificacion finalizada');
+            }
+        }
+    });
+
+    btnNext.addEventListener('click', () => {
+        window.location.href = docId ? `/sign/${docId}` : '/dashboard';
+    });
+
+    window.addEventListener('beforeunload', () => {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+    });
+
+    loadDependencyStatus();
+    startCamera();
+    updateLivenessInstruction();
+</script>
+{% endblock %}
