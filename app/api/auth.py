@@ -2,10 +2,11 @@
 API REST v1 - Endpoints de Autenticación
 """
 from flask import Blueprint, request, session
-from flask_login import login_user, logout_user, current_user, login_required
+from flask_login import login_user, logout_user, current_user
 from app.services.auth import auth_service
 from app.models.database import User
 from app.api.utils import APIResponse, user_to_dict
+from app.api.decorators import api_login_required
 
 bp = Blueprint('api_auth', __name__, url_prefix='/api/v1/auth')
 
@@ -86,7 +87,7 @@ def login():
 
 
 @bp.route('/logout', methods=['POST'])
-@login_required
+@api_login_required
 def logout():
     """
     Logout de usuario
@@ -102,7 +103,7 @@ def logout():
 
 
 @bp.route('/me', methods=['GET'])
-@login_required
+@api_login_required
 def get_current_user():
     """
     Obtener información del usuario actual

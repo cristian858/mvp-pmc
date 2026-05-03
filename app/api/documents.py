@@ -3,7 +3,7 @@ API REST v1 - Endpoints de Documentos
 """
 import os
 from flask import Blueprint, request
-from flask_login import login_required, current_user
+from flask_login import current_user
 from werkzeug.utils import secure_filename
 from app import db
 from app.models.database import Document
@@ -11,6 +11,7 @@ from app.services.document_processor import document_processor
 from app.services.ai_analyzer import ai_analyzer
 from app.config import Config
 from app.api.utils import APIResponse, document_to_dict
+from app.api.decorators import api_login_required
 
 bp = Blueprint('api_documents', __name__, url_prefix='/api/v1/documents')
 
@@ -23,7 +24,7 @@ def allowed_file(filename):
 
 
 @bp.route('', methods=['GET'])
-@login_required
+@api_login_required
 def list_documents():
     """
     Listar documentos del usuario autenticado
@@ -51,7 +52,7 @@ def list_documents():
 
 
 @bp.route('/<int:doc_id>', methods=['GET'])
-@login_required
+@api_login_required
 def get_document(doc_id):
     """
     Obtener detalles de un documento específico
@@ -75,7 +76,7 @@ def get_document(doc_id):
 
 
 @bp.route('', methods=['POST'])
-@login_required
+@api_login_required
 def upload_document():
     """
     Subir y analizar un nuevo documento PDF
@@ -146,7 +147,7 @@ def upload_document():
 
 
 @bp.route('/<int:doc_id>', methods=['DELETE'])
-@login_required
+@api_login_required
 def delete_document(doc_id):
     """
     Eliminar un documento
@@ -176,7 +177,7 @@ def delete_document(doc_id):
 
 
 @bp.route('/<int:doc_id>/status', methods=['PATCH'])
-@login_required
+@api_login_required
 def update_document_status(doc_id):
     """
     Actualizar el estado de un documento

@@ -2,16 +2,17 @@
 API REST v1 - Endpoints de Firma Digital
 """
 from flask import Blueprint, request
-from flask_login import login_required, current_user
+from flask_login import current_user
 from app import db
 from app.models.database import Signature, Document
 from app.api.utils import APIResponse, signature_to_dict
+from app.api.decorators import api_login_required
 
 bp = Blueprint('api_signature', __name__, url_prefix='/api/v1/signatures')
 
 
 @bp.route('', methods=['GET'])
-@login_required
+@api_login_required
 def list_signatures():
     """
     Listar firmas del usuario autenticado
@@ -41,7 +42,7 @@ def list_signatures():
 
 
 @bp.route('/<int:sig_id>', methods=['GET'])
-@login_required
+@api_login_required
 def get_signature(sig_id):
     """
     Obtener detalles de una firma
@@ -61,7 +62,7 @@ def get_signature(sig_id):
 
 
 @bp.route('/document/<int:doc_id>', methods=['GET'])
-@login_required
+@api_login_required
 def get_document_signatures(doc_id):
     """
     Obtener todas las firmas de un documento específico
@@ -88,7 +89,7 @@ def get_document_signatures(doc_id):
 
 
 @bp.route('/document/<int:doc_id>/create', methods=['POST'])
-@login_required
+@api_login_required
 def create_signature(doc_id):
     """
     Crear una nueva firma para un documento
@@ -138,7 +139,7 @@ def create_signature(doc_id):
 
 
 @bp.route('/<int:sig_id>/update', methods=['PATCH'])
-@login_required
+@api_login_required
 def update_signature(sig_id):
     """
     Actualizar una firma existente

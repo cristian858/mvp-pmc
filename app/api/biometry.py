@@ -2,16 +2,17 @@
 API REST v1 - Endpoints de Biometría
 """
 from flask import Blueprint, request
-from flask_login import login_required, current_user
+from flask_login import current_user
 from app import db
 from app.models.database import BiometricVerification
 from app.api.utils import APIResponse, biometric_verification_to_dict
+from app.api.decorators import api_login_required
 
 bp = Blueprint('api_biometry', __name__, url_prefix='/api/v1/biometry')
 
 
 @bp.route('', methods=['GET'])
-@login_required
+@api_login_required
 def list_verifications():
     """
     Listar verificaciones biométricas del usuario
@@ -41,7 +42,7 @@ def list_verifications():
 
 
 @bp.route('/<int:verification_id>', methods=['GET'])
-@login_required
+@api_login_required
 def get_verification(verification_id):
     """
     Obtener detalles de una verificación biométrica
@@ -64,7 +65,7 @@ def get_verification(verification_id):
 
 
 @bp.route('/<int:verification_id>/status', methods=['GET'])
-@login_required
+@api_login_required
 def get_verification_status(verification_id):
     """
     Obtener el estado actual de una verificación
