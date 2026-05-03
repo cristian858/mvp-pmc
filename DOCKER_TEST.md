@@ -76,7 +76,7 @@ Debería mostrar:
 
 ✅ SafeSign AI está listo!
 
-📱 Accede a: http://localhost:5000
+📱 Accede a: http://localhost:8080
 ```
 
 ### Opción B: Verificación manual
@@ -85,7 +85,7 @@ Debería mostrar:
 docker-compose logs -f safesign-backend
 
 # En otra terminal, probar acceso
-curl http://localhost:5000/
+curl http://localhost:8080/
 
 # Deberías recibir HTML (redirect a login)
 ```
@@ -99,7 +99,7 @@ curl http://localhost:5000/
 
 Abre en tu navegador:
 ```
-http://localhost:5000/
+http://localhost:8080/
 ```
 
 Debería mostrar la página de login de SafeSign AI.
@@ -146,7 +146,7 @@ FLASK_PORT=8000
 ```bash
 # Esperar a que se inicie completamente (30 segundos)
 sleep 30
-curl http://localhost:5000/
+curl http://localhost:8080/
 ```
 
 ### "ModuleNotFoundError"
@@ -179,9 +179,9 @@ docker-compose up -d
 - [ ] `docker-compose build` completa exitosamente
 - [ ] `docker-compose up -d` inicia sin errores
 - [ ] `docker ps` muestra el contenedor safesign-backend
-- [ ] `curl http://localhost:5000/` retorna HTML
+- [ ] `curl http://localhost:8080/` retorna HTML
 - [ ] `verify_docker.py` muestra ✅
-- [ ] Navegador abre `http://localhost:5000/` sin problemas
+- [ ] Navegador abre `http://localhost:8080/` sin problemas
 - [ ] Puedes registrarte e iniciar sesión
 - [ ] Puedes subir un PDF
 

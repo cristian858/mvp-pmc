@@ -14,6 +14,9 @@ if __name__ == '__main__':
         from app import create_app
 
         app = create_app(os.environ.get('FLASK_ENV', 'development'))
+        
+        # Leer puerto de variables de entorno
+        port = int(os.environ.get('FLASK_PORT', 8080))
 
         print("\n" + "=" * 60)
         print("SAFESIGN AI - SISTEMA LISTO")
@@ -25,12 +28,12 @@ if __name__ == '__main__':
         print("[OK] Verificacion biometrica real con camara")
         print("[OK] Firma digital")
         print("=" * 60)
-        print("\nIniciando servidor en http://localhost:5000\n")
+        print(f"\nIniciando servidor en http://localhost:{port}\n")
 
         app.run(
             debug=True,
             host='0.0.0.0',
-            port=5000,
+            port=port,
             use_reloader=False
         )
     except Exception as e:

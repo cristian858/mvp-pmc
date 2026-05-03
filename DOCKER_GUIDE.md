@@ -56,7 +56,7 @@ docker ps
 
 ### 5. Acceder a la aplicación
 ```
-http://localhost:5000/
+http://localhost:8080/
 ```
 
 ### 6. Ver logs

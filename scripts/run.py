@@ -31,9 +31,12 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     
+    # Leer puerto de variables de entorno
+    port = int(os.environ.get('FLASK_PORT', 8080))
+    
     # Ejecutar servidor
     app.run(
         debug=os.environ.get('FLASK_ENV') == 'development',
         host='0.0.0.0',
-        port=5000
+        port=port
     )

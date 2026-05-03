@@ -60,7 +60,7 @@ up() {
     docker-compose up -d
     print_success "Contenedor iniciado"
     echo ""
-    echo -e "📱 Accede a: ${BLUE}http://localhost:5000${NC}"
+    echo -e "📱 Accede a: ${BLUE}http://localhost:8080${NC}"
 }
 
 # Down

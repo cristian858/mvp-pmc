@@ -124,7 +124,7 @@ def main():
     print("\n" + "=" * 60)
     print("✅ SafeSign AI está listo!")
     print("=" * 60)
-    print("\n📱 Accede a: http://localhost:5000")
+    print("\n📱 Accede a: http://localhost:8080")
     print("\n📖 Documentación: DOCKER_GUIDE.md")
     
 if __name__ == '__main__':

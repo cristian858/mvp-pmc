@@ -4,7 +4,7 @@
 
 1. **Leer 5 minutos:** `DOCKER_SETUP.md`
 2. **Ejecutar 10 minutos:** Los comandos abajo
-3. **Acceder:** http://localhost:5000/
+3. **Acceder:** http://localhost:8080/
 
 ## Comandos Rápidos
 
@@ -25,7 +25,7 @@ docker-compose up -d
 python3 verify_docker.py
 
 # Si todo está bien, accede en:
-# http://localhost:5000/
+# http://localhost:8080/
 ```
 
 ## ¿Algo no funciona?

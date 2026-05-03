@@ -46,7 +46,7 @@ docker-compose up -d
 
 ### 5️⃣ Accede a la aplicación
 ```
-http://localhost:5000/
+http://localhost:8080/
 ```
 
 ---
@@ -124,7 +124,7 @@ docker ps | grep safesign
 docker-compose exec safesign-backend python -c "import cv2; import flask; print('OK')"
 
 # Acceder a la app
-curl http://localhost:5000/
+curl http://localhost:8080/
 ```
 
 ---

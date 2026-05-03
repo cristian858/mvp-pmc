@@ -24,7 +24,7 @@ python scripts/serve.py
 python scripts/run.py
 ```
 
-Abrirá en `http://localhost:5000`
+Abrirá en `http://localhost:8080`
 
 ## 3. Primera Vez - Crear Cuenta
 
@@ -95,12 +95,12 @@ ProyectoPMC/
 
 ## 🌐 URLs Principales
 
-- **Home**: http://localhost:5000/
-- **Login**: http://localhost:5000/login
-- **Registro**: http://localhost:5000/register
-- **Dashboard**: http://localhost:5000/dashboard (requiere login)
-- **Subir**: http://localhost:5000/upload
-- **Verificación**: http://localhost:5000/verify
+- **Home**: http://localhost:8080/
+- **Login**: http://localhost:8080/login
+- **Registro**: http://localhost:8080/register
+- **Dashboard**: http://localhost:8080/dashboard (requiere login)
+- **Subir**: http://localhost:8080/upload
+- **Verificación**: http://localhost:8080/verify
 
 ---
 

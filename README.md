@@ -92,7 +92,7 @@ USE_MOCK_AI=true
 python scripts/serve.py
 ```
 
-La aplicación estará disponible en `http://localhost:5000`
+La aplicación estará disponible en `http://localhost:8080`
 
 ---
 
