@@ -10,3 +10,4 @@ server.err
 instance/*.db
 data/uploads/
 data/signatures/
+.DS_Store

@@ -1,0 +1,44 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+server.log
+server.err
+*.log
+
+# Database
+instance/*.db
+
+# Data files (keep directory structure with .gitkeep)
+data/uploads/*
+!data/uploads/.gitkeep
+data/signatures/*
+!data/signatures/.gitkeep
+data/capturas/*
+!data/capturas/.gitkeep
+data/*
+!data/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerignore

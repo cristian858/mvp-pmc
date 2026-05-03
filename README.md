@@ -2,9 +2,9 @@
 
 Una aplicación web moderna para firmar documentos de forma segura utilizando inteligencia artificial, verificación biométrica y reconocimiento facial.
 
-## 🚀 Características Principales
+## Características Principales
 
-### ✅ Funcionalidades Implementadas
+### Funcionalidades Implementadas
 
 1. **Autenticación Segura**
    - Registro de usuarios con validación de email
@@ -22,10 +22,10 @@ Una aplicación web moderna para firmar documentos de forma segura utilizando in
    - Generación de resúmenes claros
    - Identificación de obligaciones principales
    - Detección de riesgos y cláusulas peligrosas
-   - **Modo Mock** (análisis con regex) por defecto
-   - **Preparado** para integración con OpenAI/Claude API
+   - Modo Mock (análisis con regex) por defecto
+   - Preparado para integración con OpenAI/Claude API
 
-4. **Verificación Biométrica** (desde código existente)
+4. **Verificación Biométrica**
    - Verificación facial real con cámara usando OpenCV
    - Preparado para reconocimiento avanzado con DeepFace + ArcFace
    - Detección de movimiento (Liveness Detection)
@@ -38,500 +38,263 @@ Una aplicación web moderna para firmar documentos de forma segura utilizando in
    - Registro de metadatos (usuario, fecha, documento)
 
 6. **Dashboard Intuitivo**
-    - Vista de documentos con estado
-    - Interfaz responsiva con Bootstrap
-    - Navegación clara
+   - Vista de documentos con estado
+   - Interfaz responsiva con Bootstrap
+   - Navegación clara
 
 7. **API REST v1**
-    - Endpoints JSON para todas las operaciones
-    - Autenticación basada en sesiones
-    - Soporte para paginación
-    - Documentación completa con ejemplos
-    - Base lista para integración con frontend moderno (React, Vue, etc.)
+   - Endpoints JSON para todas las operaciones
+   - Autenticación basada en sesiones
+   - Soporte para paginación
+   - Documentación completa con ejemplos
+   - Base lista para integración con frontend moderno (React, Vue, etc.)
 
----
+## Descripción General
 
-## 📋 Requisitos
+SafeSign AI es una plataforma moderna de firma digital con análisis inteligente de documentos, verificación biométrica y reconocimiento facial. El proyecto incluye un backend Flask robusto y un frontend React responsivo.
 
-- Python 3.9+
-- pip (gestor de paquetes)
+Una aplicación web completa para:
+- Firmar documentos de forma segura y legal
+- Analizar contratos automáticamente con IA para identificar riesgos y obligaciones
+- Verificar identidad mediante reconocimiento facial y biometría
+- Gestionar documentos de forma centralizada y segura
 
----
+## Características Técnicas
 
-## 🔧 Instalación
+### Backend (Flask)
+- API REST JSON completamente funcional
+- Autenticación segura con sesiones encriptadas
+- Análisis de documentos PDF con IA (modo mock por defecto)
+- Verificación biométrica con cámara web
+- Base de datos SQLAlchemy con modelos robustos
+- Almacenamiento seguro de firmas y datos sensibles
+- Soporte para Docker
 
-### 1. Clonar el repositorio
-```bash
-git clone https://github.com/juancamilop06/RecoFacial.git
-cd RecoFacial
+### Frontend (React)
+- Interfaz moderna y responsiva con Vite
+- Componentes reutilizables y bien organizados
+- Iconografía vectorial centralizada y estandarizada
+- Integración completa con API backend
+- Gestión de estado centralizada
+- Diseño accesible y profesional
+
+## Estructura del Proyecto
+
+```
+mvp-pmc/
+├── README.md              # Esta documentación
+├── LICENSE                # Licencia CC BY-NC 4.0
+├── .gitignore            # Configuración de git
+│
+├── backend/              # Aplicación Flask
+│   ├── README.md         # Documentación específica del backend
+│   ├── app/              # Código fuente (routes, services, models)
+│   ├── scripts/          # Entry points (serve.py, run.py)
+│   ├── Dockerfile        # Configuración Docker
+│   ├── docker-compose.yml # Orquestación de servicios
+│   ├── Makefile          # Comandos útiles
+│   ├── requirements.txt   # Dependencias Python
+│   ├── data/             # Datos locales (uploads, signatures, capturas)
+│   └── instance/         # Base de datos SQLite
+│
+└── frontend/             # Aplicación React + Vite
+    ├── README.md         # Documentación específica del frontend
+    ├── src/              # Código fuente (components, pages, services)
+    ├── public/           # Archivos estáticos
+    ├── package.json      # Dependencias Node.js
+    ├── vite.config.js    # Configuración Vite
+    └── dist/             # Build producción
 ```
 
-### 2. Crear entorno virtual
-```bash
-# Windows
-python -m venv venv
-venv\Scripts\activate
+## Quick Start
 
-# macOS / Linux
+### Prerequisitos Globales
+- Python 3.9+ (para backend)
+- Node.js 18+ (para frontend)
+- Docker & Docker Compose (opcional, recomendado)
+
+### Opción 1: Ejecución Local (Sin Docker)
+
+#### Backend
+```bash
+cd backend/
+
+# Crear entorno virtual
 python3 -m venv venv
-source venv/bin/activate
-```
+source venv/bin/activate  # En Windows: venv\Scripts\activate
 
-### 3. Instalar dependencias
-```bash
+# Instalar dependencias
 pip install -r requirements.txt
-```
 
-### 4. Configurar variables de entorno
-```bash
+# Configurar variables de entorno
 cp .env.example .env
-```
 
-Edita `.env` con tus valores (principalmente para API keys de IA):
-```env
-FLASK_ENV=development
-SECRET_KEY=your-secret-key-here
-USE_MOCK_AI=true
-```
-
-### 5. Ejecutar la aplicación
-```bash
+# Ejecutar servidor
 python scripts/serve.py
 ```
+Disponible en `http://localhost:8080`
 
-La aplicación estará disponible en `http://localhost:8080`
-
----
-
-## 📁 Estructura del Proyecto
-
-```
-SafeSign AI/
-├── app/                          # Aplicación principal
-│   ├── __init__.py              # Factory de Flask
-│   ├── models/
-│   │   ├── __init__.py
-│   │   └── database.py          # Modelos SQLAlchemy
-│   ├── routes/
-│   │   ├── __init__.py
-│   │   ├── auth.py              # Rutas de login/registro
-│   │   ├── documents.py         # Rutas de documentos
-│   │   ├── biometry.py          # Rutas de verificación
-│   │   └── signature.py         # Rutas de firma
-│   ├── services/
-│   │   ├── __init__.py
-│   │   ├── auth.py              # Lógica de autenticación
-│   │   ├── biometry.py          # Lógica biométrica
-│   │   ├── document_processor.py # Procesamiento de PDFs
-│   │   └── ai_analyzer.py       # Análisis con IA
-│   ├── templates/               # Templates HTML
-│   │   ├── base.html
-│   │   ├── login.html
-│   │   ├── register.html
-│   │   ├── dashboard.html
-│   │   ├── upload.html
-│   │   ├── document_view.html
-│   │   ├── biometry_verify.html
-│   │   ├── signature_pad.html
-│   │   ├── signature_result.html
-│   │   └── error.html
-│   └── static/
-│       ├── css/
-│       │   └── style.css
-│       └── js/
-│           └── app.js
-├── tests/                        # Tests unitarios
-├── data/                         # Datos locales
-│   ├── uploads/                 # PDFs subidos
-│   ├── signatures/              # Firmas guardadas
-│   └── capturas/                # Fotos de verificación
-├── instance/                    # Instancia (BD SQLite)
-│   └── safesign.db
-├── scripts/                     # Entradas de ejecución
-│   ├── run.py
-│   └── serve.py
-├── tools/
-│   └── legacy/                  # Prototipo biométrico original
-│       ├── verify.py
-│       └── signature_server.py
-├── requirements.txt             # Dependencias
-├── .env.example                 # Variables de entorno
-├── .gitignore                   # Git ignore
-└── README.md                    # Esta documentación
-```
-
----
-
-## 📖 Flujo de Uso
-
-### Usuario Nuevo
-1. **Registro**: Crea cuenta con email y contraseña
-2. **Dashboard**: Accede a tu área personal
-3. **Subir**: Sube un documento PDF
-4. **Análisis**: El sistema analiza automáticamente
-5. **Ver**: Revisa resumen, obligaciones y riesgos
-6. **Verificar**: Completa verificación biométrica
-7. **Firmar**: Dibuja tu firma electrónica
-8. **Listo**: Documento firmado y guardado
-
-### Usuario Existente
-1. **Login**: Inicia sesión
-2. Accede a tus documentos anteriores
-3. Puede seguir firmando documentos nuevos
-
----
-
-## 🗄️ Base de Datos
-
-### Modelos
-
-#### User
-```python
-id (PK)
-name: String
-email: String (UNIQUE)
-password_hash: String
-created_at: DateTime
-```
-
-#### Document
-```python
-id (PK)
-user_id (FK → User)
-filename: String
-filepath: String
-contenido_texto: Text
-resumen_ia: Text
-riesgos: Text
-obligaciones: Text
-status: String (pendiente/firmado/rechazado)
-created_at: DateTime
-updated_at: DateTime
-```
-
-#### Signature
-```python
-id (PK)
-user_id (FK → User)
-document_id (FK → Document)
-firma_imagen: String (ruta PNG)
-firma_video: String (ruta WebM)
-fecha_firma: DateTime
-resultado_verificacion: String (VERDE/AMARILLO/ROJO)
-notas: Text
-```
-
-#### BiometricVerification
-```python
-id (PK)
-user_id (FK → User)
-foto_referencia: String
-foto_neutral: String
-estado: String (pendiente/verificado/rechazado)
-semaforo: String (VERDE/AMARILLO/ROJO)
-movimiento_score: Float
-distancia_facial: Float
-intentos: Integer
-created_at: DateTime
-```
-
----
-
-## 🔐 Seguridad
-
-- Contraseñas hasheadas con Werkzeug
-- Sesiones encriptadas con Flask-Login
-- Rutas protegidas con @login_required
-- CSRF protección (activable con WTForms)
-- SQL Injection prevención (SQLAlchemy)
-- Variables sensibles en .env (no en código)
-
----
-
-## 🤖 IA y Análisis
-
-### Modo Mock (Por defecto)
-El análisis utiliza patrones regex y palabras clave:
-- Detección de tipo de contrato
-- Extracción de obligaciones
-- Identificación de riesgos
-- Extracción de puntos clave
-
-**Activar**: `USE_MOCK_AI=true` en `.env`
-
-### Modo Real (Preparado)
-Para integrar OpenAI o Claude:
-1. Obtén API key
-2. Configura en `.env`:
-   ```env
-   USE_MOCK_AI=false
-   OPENAI_API_KEY=sk-...
-   # o
-   CLAUDE_API_KEY=sk-ant-...
-   ```
-3. Implementa en `app/services/ai_analyzer.py`
-
----
-
-## 🧪 Testing
-
-### Ejecutar tests
+#### Frontend
 ```bash
-pytest tests/
+cd frontend/
+
+# Instalar dependencias
+npm install
+
+# Ejecutar servidor de desarrollo
+npm run dev
+```
+Disponible en `http://localhost:5173`
+
+### Opción 2: Ejecución con Docker (Recomendado)
+
+```bash
+cd backend/
+
+# Construir imagen
+docker-compose build
+
+# Iniciar contenedor
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f safesign-backend
+```
+Disponible en `http://localhost:8080`
+
+Frontend se puede ejecutar localmente:
+```bash
+cd frontend/
+npm install
+npm run dev
 ```
 
-### Tests incluidos
-- Autenticación (registro, login, validaciones)
-- Documentos (subida, análisis)
-- Biometría (verificación facial)
-- Seguridad (rutas protegidas)
+## Flujo Principal
 
----
+1. Registro/Login - El usuario se registra o inicia sesión
+2. Subir Documento - Sube un archivo PDF para firmar
+3. Análisis Automático - El sistema analiza con IA el contenido
+4. Ver Análisis - Revisa resumen, obligaciones y riesgos
+5. Verificación Biométrica - Completa reconocimiento facial (cámara web)
+6. Firmar - Dibuja su firma electrónica
+7. Completado - Documento firmado y guardado
 
-## 🚀 Próximas Mejoras
+## Documentación Detallada
 
-### Fase 2 (Escalabilidad)
-- [ ] Soporte para múltiples formatos (Word, Excel)
-- [ ] Almacenamiento en cloud (AWS S3, Azure Blob)
-- [ ] API REST documentada (Swagger)
-- [ ] Autenticación OAuth (Google, GitHub)
-- [ ] Dashboard administrativo
+- [Backend](./backend/README.md) - Instalación, API endpoints, base de datos, seguridad
+- [Frontend](./frontend/README.md) - Setup React, componentes, estructura
 
-### Fase 3 (IA Real)
-- [ ] Integración OpenAI/Claude
-- [ ] Análisis de claúsulas específicas
-- [ ] Recomendaciones personalizadas
-- [ ] Comparación de contratos
+## Tecnologías Utilizadas
 
-### Fase 4 (Producción)
-- [ ] Migración a PostgreSQL
-- [ ] Deployment (Docker, Heroku, AWS)
-- [ ] CI/CD (GitHub Actions)
-- [ ] Monitoreo y logging
-- [ ] Backup automático
+### Backend
+- Flask (framework web)
+- SQLAlchemy (ORM de base de datos)
+- PyPDF2 (procesamiento de PDFs)
+- OpenCV (procesamiento de imágenes y cámara)
+- Flask-Login (autenticación)
+- Werkzeug (hashing de contraseñas)
+- Docker (contenedorización)
 
----
+### Frontend
+- React 18 (framework UI)
+- Vite (bundler moderno)
+- Tailwind CSS (estilos)
+- JavaScript ES6+
 
-## 🤝 Contribuciones
+## Variables de Entorno
 
-¿Encontraste un bug o tienes una idea? 
-1. Fork el proyecto
-2. Crea una rama (`git checkout -b feature/nueva-feature`)
+Crear `.env` en la raíz del backend (ver `.env.example`):
+
+```env
+FLASK_ENV=development
+SECRET_KEY=your-secret-key
+USE_MOCK_AI=true
+DATABASE_URL=sqlite:///instance/safesign.db
+FLASK_PORT=8080
+```
+
+## Licencia
+
+Este proyecto está bajo licencia **Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0)**.
+
+Resumen:
+- Permitido: Usar, modificar, distribuir para fines no comerciales con atribución
+- Prohibido: Uso comercial, venta, o lucro del proyecto o sus derivadas
+- Requerido: Incluir licencia y atribución original
+
+Ver [LICENSE](./LICENSE) para el texto completo.
+
+## Contribuciones
+
+Las contribuciones son bienvenidas bajo la misma licencia:
+1. Fork el repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-feature`)
 3. Commit cambios (`git commit -m 'Agrega nueva-feature'`)
 4. Push a la rama (`git push origin feature/nueva-feature`)
 5. Abre un Pull Request
 
----
+## Próximas Mejoras
 
-## 📝 Licencia
+- Integración real con OpenAI/Claude API
+- Soporte para múltiples formatos (Word, Excel, etc.)
+- Almacenamiento en cloud (AWS S3, Azure Blob)
+- Dashboard administrativo
+- Autenticación OAuth (Google, GitHub)
+- App móvil
+- Migración a PostgreSQL para producción
+- Deployment automatizado
 
-Este proyecto está bajo licencia MIT - ver [LICENSE](LICENSE) para más detalles.
+## Roadmap
 
----
-
-## 📧 Contacto
-
-- **Autor**: Juan Camilo Prieto
-- **GitHub**: [@juancamilop06](https://github.com/juancamilop06)
-- **Proyecto**: [RecoFacial](https://github.com/juancamilop06/RecoFacial)
-
----
-
-## 🎯 Hoja de Ruta
-
-**MVP Actual (v0.1)**
-- ✅ Autenticación
-- ✅ Subida de documentos
-- ✅ Análisis con IA (mock)
-- ✅ Verificación biométrica con cámara
-- ✅ Firma digital
+**MVP Actual (v0.1 - COMPLETADO)**
+- Autenticación con sesiones
+- Subida y procesamiento de PDFs
+- Análisis con IA (mock)
+- Verificación biométrica
+- Firma digital
+- API REST funcional
 
 **Próximo Release (v0.2)**
-- [ ] Tests unitarios completos
-- [ ] API REST
-- [ ] Admin panel
-- [ ] Exportación de reportes
+- Tests unitarios completos
+- Panel de administración
+- Exportación de reportes
 
 **Versión 1.0**
-- [ ] IA real integrada
-- [ ] Producción ready
-- [ ] Multi-idioma
-- [ ] App móvil
+- IA real integrada
+- Producción-ready
+- Multi-idioma
+- App móvil
 
-Una red neuronal es un modelo de inteligencia artificial inspirado en el cerebro humano.
+## Troubleshooting
 
-Está formada por muchas neuronas artificiales conectadas entre sí.
+### Backend no inicia
+```bash
+# Limpiar cache Python
+find . -type d -name __pycache__ -exec rm -r {} +
+pip install -r requirements.txt --force-reinstall
+```
 
-Estructura simplificada:
+### Puerto 8080 en uso
+Cambiar en `backend/scripts/serve.py` o `backend/docker-compose.yml`
 
-Entrada → capas ocultas → salida
+### Problemas con cámara web
+- En Docker: ejecutar frontend localmente
+- En local: verificar permisos del navegador
+- En macOS: permitir acceso a cámara en Preferencias > Seguridad
 
-Cada neurona realiza cálculos matemáticos sobre los datos.
+### Base de datos corrupta
+```bash
+cd backend/
+rm instance/safesign.db
+python scripts/serve.py  # Se recrea automáticamente
+```
 
-Durante el entrenamiento la red aprende patrones viendo millones de ejemplos.
+## Contacto y Soporte
+
+Para reportar bugs o sugerencias:
+- Abre un issue en el repositorio
+- Revisa la documentación detallada en cada carpeta
 
 ---
 
-# Qué es ArcFace
-
-ArcFace es un modelo de reconocimiento facial basado en deep learning.
-
-Características:
-
-- convierte rostros en vectores matemáticos
-- usa distancia angular entre vectores
-- tiene precisión muy alta (~99%)
-
-ArcFace fue entrenado con millones de rostros para aprender a separar identidades.
-
----
-
-# Requisitos
-
-Python 3.9 o 3.10  
-Webcam  
-Windows / Linux / Mac
-
----
-
-# Estructura del proyecto
-
-PMC/
-
-tools/legacy/verify.py  
-requirements.txt  
-data/  
-id.jpg  
-README.md
-
-La imagen data/id.jpg es la foto de referencia.
-
----
-
-# Crear el entorno virtual
-
-Ir a la carpeta del proyecto:
-
-```
-cd D:\PMC
-```
-
-Crear entorno virtual:
-
-```
-python -m venv .venv
-```
-
-Activar entorno virtual:
-
-```
-.venv\Scripts\activate
-```
-
-Si está activo verás algo así:
-
-```
-(.venv) PS D:\PMC>
-```
-
----
-
-# Instalar dependencias
-
-```
-pip install -r requirements.txt
-```
-
----
-
-# Colocar imagen de referencia
-
-Crear carpeta:
-
-```
-data
-```
-
-Dentro colocar:
-
-```
-data/id.jpg
-```
-
-Esta será la foto que el sistema usará para comparar.
-
----
-
-# Ejecutar el programa
-
-Ejecutar:
-
-```
-python tools/legacy/verify.py
-```
-
-La cámara se abrirá.
-
-Controles:
-
-SPACE → capturar y verificar rostro  
-Q → salir  
-ESC → salir  
-
----
-
-# Ejemplo de uso
-
-1. Coloca tu foto en data/id.jpg
-2. Ejecuta el programa
-3. Mira a la cámara
-4. Presiona SPACE
-
-Resultado posible:
-
-MATCH ✔ dist=0.32
-
-o
-
-NO MATCH ✖ dist=0.65
-
----
-
-# Problemas comunes
-
-Error protobuf
-
-Solución:
-
-```
-pip install protobuf==3.20.3
-```
-
----
-
-No se abre la cámara
-
-Verifica que ninguna otra aplicación esté usando la webcam.
-
----
-
-Espacio en disco insuficiente
-
-TensorFlow es grande (~500MB).
-Asegúrate de tener al menos 3GB libres.
-
----
-
-# Librerías usadas
-
-DeepFace → framework de reconocimiento facial  
-TensorFlow → motor de redes neuronales  
-OpenCV → manejo de cámara e imágenes  
-RetinaFace → detector de rostros  
-ArcFace → modelo de reconocimiento facial
-
----
-
-# Licencia
-
-Proyecto educativo.
+Hecho con dedicación para seguridad digital. SafeSign AI MVP 2026.
