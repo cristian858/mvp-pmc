@@ -38,9 +38,16 @@ Una aplicación web moderna para firmar documentos de forma segura utilizando in
    - Registro de metadatos (usuario, fecha, documento)
 
 6. **Dashboard Intuitivo**
-   - Vista de documentos con estado
-   - Interfaz responsiva con Bootstrap
-   - Navegación clara
+    - Vista de documentos con estado
+    - Interfaz responsiva con Bootstrap
+    - Navegación clara
+
+7. **API REST v1**
+    - Endpoints JSON para todas las operaciones
+    - Autenticación basada en sesiones
+    - Soporte para paginación
+    - Documentación completa con ejemplos
+    - Base lista para integración con frontend moderno (React, Vue, etc.)
 
 ---
 

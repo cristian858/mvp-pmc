@@ -72,6 +72,17 @@ def create_app(config_name='development'):
     app.register_blueprint(biometry_bp)
     app.register_blueprint(signature_bp)
     
+    # Registrar blueprints de API REST
+    from app.api.auth import bp as api_auth_bp
+    from app.api.documents import bp as api_documents_bp
+    from app.api.biometry import bp as api_biometry_bp
+    from app.api.signature import bp as api_signature_bp
+    
+    app.register_blueprint(api_auth_bp)
+    app.register_blueprint(api_documents_bp)
+    app.register_blueprint(api_biometry_bp)
+    app.register_blueprint(api_signature_bp)
+    
     # Ruta de inicio
     @app.route('/')
     def index():
