@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: safesign-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    port: 8080
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: ""
+      - key: USE_MOCK_AI
+        value: "true"
+      - key: FRONTEND_URL
+        value: ""  # Completar con la URL de Vercel después del primer deploy

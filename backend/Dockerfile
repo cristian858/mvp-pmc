@@ -89,10 +89,10 @@ USER safesign
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5000/ || exit 1
+    CMD curl -f http://localhost:8080/ || exit 1
 
 # Exponer puerto Flask
-EXPOSE 5000
+EXPOSE 8080
 
 # Variables de entorno por defecto (pueden ser overrideadas)
 ENV FLASK_APP=scripts/serve.py \

@@ -48,15 +48,20 @@ def create_app(config_name='development'):
     app.config.from_object(config[config_name])
     
     # Configurar CORS
+    allowed_origins = [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
+    ]
+    frontend_url = os.environ.get('FRONTEND_URL', '').strip()
+    if frontend_url:
+        allowed_origins.append(frontend_url)
+
     cors_config = {
-        "origins": [
-            "http://localhost:3000",    # React dev server anterior
-            "http://localhost:5173",    # Vite dev server (actual)
-            "http://localhost:5174",    # Vite dev server alternativo
-            "http://127.0.0.1:3000",
-            "http://127.0.0.1:5173",
-            "http://127.0.0.1:5174",
-        ],
+        "origins": allowed_origins,
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True,
