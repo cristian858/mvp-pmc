@@ -169,6 +169,9 @@ const TimelineItem = ({ phase, status, items, isLast, delay = 0 }) => {
   );
 };
 
+import logoLight from '../assets/logos/logo-light.png';
+import logoDark from '../assets/logos/logo-dark.png';
+
 export function Home() {
   const navigate = useNavigate();
   const heroRef = useRef(null);
@@ -319,8 +322,7 @@ export function Home() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200/50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <LogoMark className="w-10 h-10 text-emerald-600" />
-            <span className="text-xl font-bold text-slate-900">SafeSign</span>
+            <img src={logoDark} alt="SafeSign Logo" className="h-16 w-auto object-contain" />
           </div>
           <div className="flex items-center gap-4">
             <button 
@@ -627,8 +629,7 @@ export function Home() {
           <div className="grid md:grid-cols-4 gap-12 mb-12">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <LogoMark className="w-8 h-8 text-emerald-500" />
-                <span className="text-lg font-bold text-white">SafeSign</span>
+                <img src={logoLight} alt="SafeSign Logo" className="h-12 w-auto object-contain" />
               </div>
               <p className="text-sm">
                 La plataforma de firma digital inteligente que transforma cada contrato en una decisión informada.

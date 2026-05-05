@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { CogIcon } from './Icons';
+import logoLight from '../assets/logos/logo-light.png';
+import logoDark from '../assets/logos/logo-dark.png';
 
 export const Layout = ({ children }) => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -30,10 +32,7 @@ export const Layout = ({ children }) => {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center text-white font-bold text-lg">
-              SA
-            </div>
-            <span className="font-bold text-xl text-slate-900 hidden sm:inline">SafeSign AI</span>
+            <img src={logoDark} alt="SafeSign Logo" className="h-16 w-auto object-contain" />
           </Link>
 
           {/* Links */}
@@ -111,7 +110,10 @@ export const Layout = ({ children }) => {
       {/* Footer */}
       {!hideNavbar && (
         <footer className="border-t border-slate-200 bg-white mt-12">
-          <div className="max-w-7xl mx-auto px-6 py-8 text-center text-slate-600 text-sm">
+          <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col items-center justify-center gap-4 text-center text-slate-600 text-sm">
+            <div className="flex items-center gap-2">
+              <img src={logoLight} alt="SafeSign Logo" className="h-12 w-auto object-contain opacity-75 grayscale sepia" />
+            </div>
             <p>&copy; 2026 SafeSign AI. Todos los derechos reservados.</p>
           </div>
         </footer>
